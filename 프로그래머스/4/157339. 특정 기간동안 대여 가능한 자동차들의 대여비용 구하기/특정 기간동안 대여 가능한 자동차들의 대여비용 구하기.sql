@@ -1,0 +1,15 @@
+
+SELECT r.CAR_ID, r.CAR_TYPE, FLOOR((r.DAILY_FEE * 30)*(1-p.DISCOUNT_RATE/100)) as FEE
+FROM CAR_RENTAL_COMPANY_CAR as r join CAR_RENTAL_COMPANY_DISCOUNT_PLAN as p 
+    on r.CAR_TYPE = p.CAR_TYPE 
+WHERE r.CAR_TYPE in ('세단', 'SUV')
+    AND NOT EXISTS( # 11월 대여중이 아닌 행만 출력
+    SELECT 1
+    FROM CAR_RENTAL_COMPANY_RENTAL_HISTORY as h
+    WHERE r.CAR_ID = h.CAR_ID #  메인 쿼리의 특정 차량과 연결된 해당 차량의 이력만 조회하라는 조건
+    and NOT(h.START_DATE > '2022-11-30' or h.END_DATE < '2022-11-01')) # 11월 대여 기록이 무조건 있는 조건
+    AND p.DURATION_TYPE = '30일 이상'
+    AND FLOOR((r.DAILY_FEE * 30)*(1-p.DISCOUNT_RATE/100)) BETWEEN 500000 AND 1999999
+ORDER BY FEE DESC, r.CAR_TYPE, r.CAR_ID DESC;
+    
+    
