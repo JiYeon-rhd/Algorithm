@@ -1,0 +1,8 @@
+-- 코드를 입력하세요
+-- 2022년 1월의 카테고리 별 도서 판매량
+
+SELECT b.CATEGORY, sum(bs.SALES) as TOTAL_SALES
+FROM BOOK as b join BOOK_SALES as bs on b.BOOK_ID = bs.BOOK_ID
+WHERE DATE_FORMAT(bs.SALES_DATE, '%Y-%m') = '2022-01'
+GROUP BY b.CATEGORY
+ORDER BY b.CATEGORY
