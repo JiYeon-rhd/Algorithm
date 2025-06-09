@@ -1,0 +1,22 @@
+-- 코드를 입력하세요
+-- 대여 시작일 기준 2022년 8월~2022년 10월 총 대여 횟수가 5회 이상인 자동차
+-- 해당 기간동안의 월별 자동차 별 대여 횟수
+
+with CAR_MONTH as(
+    SELECT MONTH(START_DATE) as MONTH, CAR_ID, count(*) as RECORDS
+    FROM CAR_RENTAL_COMPANY_RENTAL_HISTORY
+    WHERE YEAR(START_DATE) = '2022' and MONTH(START_DATE) in ('8', '9', '10')
+    GROUP BY MONTH(START_DATE), CAR_ID
+)
+SELECT MONTH, CAR_ID, RECORDS
+FROM CAR_MONTH
+WHERE CAR_ID in (
+    SELECT CAR_ID
+    FROM CAR_MONTH
+    GROUP BY CAR_ID
+    HAVING sum(RECORDS) >= 5
+    )
+ORDER BY MONTH, CAR_ID DESC
+
+
+
