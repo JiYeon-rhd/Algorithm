@@ -1,0 +1,22 @@
+-- 코드를 입력하세요
+-- 2022년 1월의 도서 판매 데이터
+-- 저자별, 카테고리 별 매출액
+with TOTAL_SALES as(
+    SELECT BOOK_ID, sum(SALES) as TOTAL_NUM
+    FROM BOOK_SALES
+    WHERE DATE_FORMAT(SALES_DATE,'%Y-%m') = '2022-01'
+    GROUP BY BOOK_ID
+),
+TEMP as(
+    SELECT b.AUTHOR_ID, b.CATEGORY, sum(b.PRICE * s.TOTAL_NUM) as TOTAL_SALES
+    FROM BOOK as b join TOTAL_SALES as s on b.BOOK_ID = s.BOOK_ID
+    GROUP BY b.AUTHOR_ID, b.CATEGORY
+    ORDER BY b.AUTHOR_ID, b.CATEGORY DESC
+)
+SELECT t.AUTHOR_ID, a.AUTHOR_NAME, t.CATEGORY, t.TOTAL_SALES
+FROM TEMP as t left join AUTHOR as a on t.AUTHOR_ID = a.AUTHOR_ID
+
+
+
+
+
