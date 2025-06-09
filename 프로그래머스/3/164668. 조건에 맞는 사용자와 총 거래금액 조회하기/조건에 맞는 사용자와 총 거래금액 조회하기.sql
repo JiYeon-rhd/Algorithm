@@ -1,0 +1,9 @@
+-- 코드를 입력하세요
+-- 완료된 중고 거래 STATUS = DONE
+-- 총금액이 70만원 이상인 사람의 정보 조회
+SELECT u.USER_ID, u.NICKNAME, sum(b.PRICE) as TOTAL_SALES
+FROM USED_GOODS_BOARD as b join USED_GOODS_USER as u on b.WRITER_ID = u.USER_ID
+WHERE b.STATUS = 'DONE'
+GROUP BY b.WRITER_ID
+HAVING sum(b.PRICE) >= 700000
+ORDER BY sum(b.PRICE)
