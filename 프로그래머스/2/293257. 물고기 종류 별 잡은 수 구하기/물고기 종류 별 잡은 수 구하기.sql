@@ -1,5 +1,4 @@
--- 코드를 작성해주세요
 SELECT count(i.ID) as FISH_COUNT, n.FISH_NAME
-FROM FISH_INFO as i join FISH_NAME_INFO as n on i.FISH_TYPE = n.FISH_TYPE
+FROM FISH_INFO as i left join FISH_NAME_INFO as n on i.FISH_TYPE = n.FISH_TYPE
 GROUP BY n.FISH_NAME
 ORDER BY count(i.ID) DESC
