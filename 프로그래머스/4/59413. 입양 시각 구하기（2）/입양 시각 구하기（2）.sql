@@ -1,0 +1,16 @@
+-- 코드를 입력하세요
+with RECURSIVE HOURS as(
+    SELECT 0 AS HOUR
+     UNION ALL
+    SELECT HOUR +1
+    FROM HOURS 
+    WHERE HOUR < 23
+
+)
+SELECT h.HOUR, IFNULL(c.COUNT, 0)
+FROM HOURS as h left join (
+    SELECT HOUR(DATETIME) as HOUR, count(ANIMAL_ID) as COUNT
+    FROM ANIMAL_OUTS
+    GROUP BY HOUR(DATETIME)
+    ) as c
+    on h.HOUR = c.HOUR
