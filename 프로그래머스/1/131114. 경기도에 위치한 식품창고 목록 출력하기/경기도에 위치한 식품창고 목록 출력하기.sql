@@ -1,0 +1,8 @@
+-- 코드를 입력하세요
+-- 경기도 위치
+-- 냉동시설이 널이면 N으로 출력
+-- 창고 아이디 오름차순
+SELECT WAREHOUSE_ID, WAREHOUSE_NAME, ADDRESS, IFNULL(FREEZER_YN, 'N') AS FREEZER_YN
+FROM FOOD_WAREHOUSE
+WHERE ADDRESS like ('경기도%')
+ORDER BY WAREHOUSE_ID
