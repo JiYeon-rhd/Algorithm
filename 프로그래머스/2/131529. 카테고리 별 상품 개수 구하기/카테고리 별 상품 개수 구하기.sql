@@ -1,0 +1,6 @@
+-- 코드를 입력하세요
+-- 상품 카테고리코드별 상품 개수
+SELECT LEFT(PRODUCT_CODE, 2) as CATEGORY, count(*) as PRODUCTS
+FROM PRODUCT
+GROUP BY LEFT(PRODUCT_CODE, 2)
+ORDER BY 1 ASC
