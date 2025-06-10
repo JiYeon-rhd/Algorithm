@@ -1,0 +1,6 @@
+-- 코드를 입력하세요
+-- 이름이 널이면 노네임으로 표기
+-- 
+SELECT ANIMAL_TYPE, IFNULL(NAME, 'No name') as NAME, SEX_UPON_INTAKE
+FROM ANIMAL_INS
+ORDER BY ANIMAL_ID
