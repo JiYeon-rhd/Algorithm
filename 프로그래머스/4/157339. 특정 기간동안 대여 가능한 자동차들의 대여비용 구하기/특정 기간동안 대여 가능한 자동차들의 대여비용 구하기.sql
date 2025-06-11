@@ -1,15 +1,26 @@
+-- 코드를 입력하세요
+-- 자동차 세단, SUV
+-- 2022년 11월 1일부터 22년 11월 30일 대여 가능 -> 필터링
+-- 30일간 대여 금액 50만원 이상 200만원 미만
+-- 자동자 아이디, 종류, 대여 금액 출력
+-- 대여 금액 내림차순, 종류 오름차순, 아이디 내림차순 
 
-SELECT r.CAR_ID, r.CAR_TYPE, FLOOR((r.DAILY_FEE * 30)*(1-p.DISCOUNT_RATE/100)) as FEE
-FROM CAR_RENTAL_COMPANY_CAR as r join CAR_RENTAL_COMPANY_DISCOUNT_PLAN as p 
-    on r.CAR_TYPE = p.CAR_TYPE 
+
+SELECT r.CAR_ID, r.CAR_TYPE, FLOOR(r.DAILY_FEE * 30 * (1 - p.DISCOUNT_RATE/100)) as FEE
+FROM CAR_RENTAL_COMPANY_CAR as r 
+        left join (SELECT CAR_TYPE, DISCOUNT_RATE 
+            FROM CAR_RENTAL_COMPANY_DISCOUNT_PLAN
+             WHERE DURATION_TYPE = '30일 이상'
+                  and CAR_TYPE in ('세단', 'SUV')
+            ) as p
+        on r.CAR_TYPE = p.CAR_TYPE
 WHERE r.CAR_TYPE in ('세단', 'SUV')
-    AND NOT EXISTS( # 11월 대여중이 아닌 행만 출력
-    SELECT 1
-    FROM CAR_RENTAL_COMPANY_RENTAL_HISTORY as h
-    WHERE r.CAR_ID = h.CAR_ID #  메인 쿼리의 특정 차량과 연결된 해당 차량의 이력만 조회하라는 조건
-    and NOT(h.START_DATE > '2022-11-30' or h.END_DATE < '2022-11-01')) # 11월 대여 기록이 무조건 있는 조건
-    AND p.DURATION_TYPE = '30일 이상'
-    AND FLOOR((r.DAILY_FEE * 30)*(1-p.DISCOUNT_RATE/100)) BETWEEN 500000 AND 1999999
-ORDER BY FEE DESC, r.CAR_TYPE, r.CAR_ID DESC;
-    
-    
+        and CAR_ID not in (
+                SELECT CAR_ID
+                FROM CAR_RENTAL_COMPANY_RENTAL_HISTORY
+                WHERE NOT(DATE_FORMAT(START_DATE, '%Y-%m-%d') > '2022-11-30'
+                        or DATE_FORMAT(END_DATE, '%Y-%m-%d') < '2022-11-01')
+                    )
+        and FLOOR(r.DAILY_FEE * 30 * (1 - p.DISCOUNT_RATE/100)) >= 500000
+        and FLOOR(r.DAILY_FEE * 30 * (1 - p.DISCOUNT_RATE/100)) < 2000000
+ORDER BY 3 DESC, 2 ASC, 1 DESC
